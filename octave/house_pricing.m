@@ -1,3 +1,30 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Gradient Descent algorithm for the optimization of the Cost Function in
+% Linear Regression.
+%
+%
+% Lectures: II. Linear Regression With One Variable
+%
+%     http://www.ml-class.org/course/video/list
+%
+%
+% First time I touch GNU Octave and first time I do numerical computations, so
+% bear with me.
+%
+%
+% For comments, corrections and improvements:
+% 
+%     https://github.com/rjack/ml-class/issues
+%
+%
+% This work is released under the WTFPL:
+%
+%     http://sam.zoy.org/wtfpl/COPYING
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 m = 100;
 x_min = 50;
 x_max = 200;
