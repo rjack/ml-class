@@ -113,8 +113,10 @@ hold on;
 % Gradient Descent.
 % Call gradient_descent_step until values converge.
 %
-tries = max_tries = 1000;
-while (tries--)
+tries_left = max_tries = 1000;
+th0_steps = [];
+th1_steps = [];
+while (tries_left--)
 	% Uncomment this to plot each iteration. Beware, it's SLOW.
 	% plot(x_min:x_max, th0 + th1 * (x_min:x_max), "g");
 
@@ -126,6 +128,10 @@ while (tries--)
 		th0 = th0 - th0_step;
 		th1 = th1 - th1_step;
 
+		% save the step values, so we can plot them in the end.
+		th0_steps(end + 1) = th0_step;
+		th1_steps(end + 1) = th1_step;
+
 		if (isnan(th0) || isnan(th1))
 			printf("Diverged\n");
 			break;
@@ -133,13 +139,20 @@ while (tries--)
 	endif
 endwhile
 
+number_of_tries = length(th0_steps);
 
 %
 % Plot the hypothesis that minimizes the cost function
 %
 plot(x_min:x_max, th0 + th1 * (x_min:x_max), "r");
 
+%
+% Plot the increments so we can see how they converge / diverge
+%
+figure;
+plot(1:number_of_tries, th0_steps, th1_steps);
 
-printf("After %d iterations (out of %d)\n", max_tries - tries - 1, max_tries);
+
+printf("After %d iterations (out of %d)\n", number_of_tries, max_tries);
 printf("th0 = %g\n", th0);
 printf("th1 = %g\n", th1);
