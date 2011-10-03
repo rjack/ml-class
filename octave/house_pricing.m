@@ -45,11 +45,7 @@ function j = cost(th0, th1, xs, ys, m)
 endfunction
 
 xs = x_min + rand(1, m) * (x_max - x_min);
-
-ys = [];
-for x = xs
-	ys(end + 1) = x + (-(x/2) + (rand(1,1) * x));
-endfor
+ys = xs + -(xs/2) + xs .* rand(1, m);
 
 th0 = 0;
 th1 = 1;
