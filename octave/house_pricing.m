@@ -29,7 +29,7 @@ m = 100;
 x_min = 50;
 x_max = 200;
 
-alpha = 0.00001;
+alpha = 0.0001;
 
 
 
@@ -110,8 +110,8 @@ ys = 3 * xs + -(xs/2) + xs .* rand(1, m);
 %
 % Thetas. TODO: experiment with different values.
 %
-th0 = 0;
-th1 = 10;
+th0 = 1;
+th1 = 1;
 
 
 %
