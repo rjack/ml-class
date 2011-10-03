@@ -86,19 +86,6 @@ endfunction
 
 
 
-function die_if_diverged (x)
-
-% If NaN, exit with shame.
-
-	if (isnan(x))
-		printf("Diverged!\n");
-		exit(1);
-	endif
-endfunction
-
-
-
-
 %
 % Examples are randomly generated.
 %
@@ -139,8 +126,10 @@ while (tries--)
 		th0 = th0 - th0_step;
 		th1 = th1 - th1_step;
 
-		die_if_diverged(th0);
-		die_if_diverged(th1);
+		if (isnan(th0) || isnan(th1))
+			printf("Diverged\n");
+			break;
+		endif
 	endif
 endwhile
 
