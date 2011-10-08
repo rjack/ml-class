@@ -56,7 +56,9 @@ function j = cost (th0, th1, xs, ys, m)
 %
 % Compute the cost function J.
 
-	j = sum((th0 + th1 * xs - ys)^2) / (2 * m);
+	distances = (th0 + th1 * xs) - ys;
+
+	j = sum(distances.^2) / (2 * m);
 
 endfunction
 
@@ -117,11 +119,9 @@ tries_left = max_tries = 1000;
 th0_steps = [];
 th1_steps = [];
 while (tries_left--)
-	% Uncomment this to plot each iteration. Beware, it's SLOW.
-	% plot(x_min:x_max, th0 + th1 * (x_min:x_max), "g");
 
 	[th0_step, th1_step] = gradient_descent_step(th0, th1, xs, ys, m, alpha);
-	% TODO: try converge with different thresholds.
+	% TODO: try converge with different alpha thresholds.
 	if (converge(th0_step, th1_step, alpha))
 		break;
 	else
@@ -145,6 +145,8 @@ number_of_tries = length(th0_steps);
 % Plot the hypothesis that minimizes the cost function
 %
 plot(x_min:x_max, th0 + th1 * (x_min:x_max), "r");
+xlabel("feet^2");
+ylabel("K dollars");
 
 %
 % Plot the increments so we can see how they converge / diverge
@@ -152,6 +154,23 @@ plot(x_min:x_max, th0 + th1 * (x_min:x_max), "r");
 figure;
 plot(1:number_of_tries, th0_steps, th1_steps);
 
+%
+% Plot the cost function for the given set of examples
+%
+% TODO: learn from this guy: http://www.ml-class.org/course/qna/view?id=68
+figure;
+tx = ty = linspace(-10, 10, 100);
+tz = zeros(length(tx), length(ty));
+for row = 1:length(tx)
+	for col = 1:length(ty)
+		tz(row,col) = cost(tx(row), ty(col), xs, ys, m);
+	endfor
+endfor
+meshc(tx, ty, tz);
+title("Cost function");
+xlabel("th0");
+ylabel("th1");
+zlabel("J(th0,th1)");
 
 printf("After %d iterations (out of %d)\n", number_of_tries, max_tries);
 printf("th0 = %g\n", th0);
