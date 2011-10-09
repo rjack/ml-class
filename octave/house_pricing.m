@@ -25,7 +25,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-m = 100;
+m = 2;
 x_min = 50;
 x_max = 200;
 
@@ -83,6 +83,7 @@ function res = converge (dx, dy, small_enough = 0)
 	else
 		res = false;
 	endif
+
 endfunction
 
 
@@ -93,7 +94,8 @@ endfunction
 %
 
 xs = x_min + rand(1, m) * (x_max - x_min);
-ys = 3 * xs + -(xs/2) + xs .* rand(1, m);
+fuzzyness = -xs + 2 .* xs .* rand(1, m);
+ys = 12 + 5 * xs + fuzzyness;
 
 
 %
@@ -145,6 +147,7 @@ number_of_tries = length(th0_steps);
 % Plot the hypothesis that minimizes the cost function
 %
 plot(x_min:x_max, th0 + th1 * (x_min:x_max), "r");
+title("Hypothesis");
 xlabel("feet^2");
 ylabel("K dollars");
 
@@ -153,13 +156,16 @@ ylabel("K dollars");
 %
 figure;
 plot(1:number_of_tries, th0_steps, th1_steps);
+title("Increments");
+xlabel("algorithm iterations");
+ylabel("step length");
 
 %
 % Plot the cost function for the given set of examples
 %
 % TODO: learn from this guy: http://www.ml-class.org/course/qna/view?id=68
 figure;
-tx = ty = linspace(-10, 10, 100);
+tx = ty = linspace(-100000, 100000, 100);
 tz = zeros(length(tx), length(ty));
 for row = 1:length(tx)
 	for col = 1:length(ty)
