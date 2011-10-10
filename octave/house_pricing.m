@@ -25,11 +25,27 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-m = 2;
+m = 100;
 x_min = 50;
 x_max = 200;
 
 alpha = 0.0001;
+
+conf.sensibility = alpha;
+
+%
+% Examples are randomly generated.
+%
+xs = x_min + rand(1, m) * (x_max - x_min);
+fuzzyness = 1000 .* rand(1, m);
+ys = 1200 + xs / 2 + fuzzyness;
+
+
+%
+% Thetas. TODO: experiment with different values.
+%
+th0 = 0;
+th1 = 0;
 
 
 
@@ -65,7 +81,7 @@ endfunction
 
 
 
-function res = converge (dx, dy, small_enough = 0)
+function res = converge (dx, dy, sensibility = 0)
 
 % usage:  converge (dx, dy)
 %         converge (dx, dy, threshold)
@@ -78,7 +94,7 @@ function res = converge (dx, dy, small_enough = 0)
 %
 % If threshold is not specified, zero is assumed.
 
-	if (abs(dx) <= small_enough && abs(dy) <= small_enough)
+	if (abs(dx) <= sensibility && abs(dy) <= sensibility)
 		res = true;
 	else
 		res = false;
@@ -87,22 +103,6 @@ function res = converge (dx, dy, small_enough = 0)
 endfunction
 
 
-
-
-%
-% Examples are randomly generated.
-%
-
-xs = x_min + rand(1, m) * (x_max - x_min);
-fuzzyness = -xs + 2 .* xs .* rand(1, m);
-ys = 12 + 5 * xs + fuzzyness;
-
-
-%
-% Thetas. TODO: experiment with different values.
-%
-th0 = 1;
-th1 = 1;
 
 
 %
@@ -117,14 +117,14 @@ hold on;
 % Gradient Descent.
 % Call gradient_descent_step until values converge.
 %
-tries_left = max_tries = 1000;
+tries_left = max_tries = 1000000;
 th0_steps = [];
 th1_steps = [];
 while (tries_left--)
 
 	[th0_step, th1_step] = gradient_descent_step(th0, th1, xs, ys, m, alpha);
 	% TODO: try converge with different alpha thresholds.
-	if (converge(th0_step, th1_step, alpha))
+	if (converge(th0_step, th1_step, conf.sensibility))
 		break;
 	else
 		th0 = th0 - th0_step;
@@ -163,20 +163,31 @@ ylabel("step length");
 %
 % Plot the cost function for the given set of examples
 %
-% TODO: learn from this guy: http://www.ml-class.org/course/qna/view?id=68
+% From: http://www.ml-class.org/course/qna/view?id=68
 figure;
-tx = ty = linspace(-100000, 100000, 100);
-tz = zeros(length(tx), length(ty));
-for row = 1:length(tx)
-	for col = 1:length(ty)
-		tz(row,col) = cost(tx(row), ty(col), xs, ys, m);
-	endfor
+tx = ty = -10:0.1:10;
+[xx, yy] = meshgrid(tx, ty);
+h = zeros(size(xx)(1), size(xx)(2), m);
+tz = zeros(size(xx));
+
+for i = 1:m
+	h(:,:,i) = xx .+ yy * xs(i);
+	tz = tz + (h(:,:,i) - ys(i)) .^ 2;
 endfor
+tz = tz / (2 * m);
+
 meshc(tx, ty, tz);
 title("Cost function");
 xlabel("th0");
 ylabel("th1");
 zlabel("J(th0,th1)");
+
+figure;
+contour(tx, ty, tz, 1:5);
+%title("Cost function");
+xlabel("th0");
+ylabel("th1");
+%zlabel("J(th0,th1)");
 
 printf("After %d iterations (out of %d)\n", number_of_tries, max_tries);
 printf("th0 = %g\n", th0);
